@@ -1,2 +1,2 @@
 xhost +local:docker
-docker exec -it frankapy_docker bash
+docker exec -it team12 bash
