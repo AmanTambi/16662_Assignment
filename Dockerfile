@@ -10,34 +10,14 @@ RUN apt install ros-noetic-moveit ros-noetic-franka-ros  -y
 RUN apt install python3-pip python3-tk -y
 RUN apt install gnome-terminal -y
 
-# Fix broken python3-openssl/cryptography ABI in the base image before any pip calls
-RUN apt-get install -y python3-openssl && pip3 install --upgrade pip pyopenssl cryptography
-
 # install python dependencies to run frankapy within the docker container
-RUN pip3 install autolab_core
+RUN pip3 install autolab_core 
 RUN pip3 install --force-reinstall pillow==9.0.1 && pip3 install --force-reinstall scipy==1.8
-RUN pip3 install numpy-quaternion numba && pip3 install --upgrade google-api-python-client
+RUN pip3 install numpy-quaternion numba && pip3 install --upgrade google-api-python-client 
 RUN pip3 install --force-reinstall numpy==1.23.5
 
 # Install realsense camera
 ARG DEBIAN_FRONTEND=noninteractive
-
-# Intel RealSense SDK (librealsense2) from Intel's apt repo — fully self-contained
-# Intel rotated their signing key; fetch current key FB0B24895113F120 via HTTP from Ubuntu keyserver
-RUN apt-get update && apt-get install -y curl gnupg2 lsb-release software-properties-common usbutils \
-    && mkdir -p /etc/apt/keyrings \
-    && curl -sSf "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xFB0B24895113F120" \
-         | gpg --dearmor -o /etc/apt/keyrings/librealsense.gpg \
-    && echo "deb [signed-by=/etc/apt/keyrings/librealsense.gpg] https://librealsense.intel.com/Debian/apt-repo focal main" \
-       | tee /etc/apt/sources.list.d/librealsense.list \
-    && apt-get update \
-    && apt-get install -y librealsense2-utils librealsense2-dev librealsense2-dbg
-
-# Bake RealSense udev rules into the image so USB perms work without host setup
-RUN mkdir -p /etc/udev/rules.d \
-    && cp /lib/udev/rules.d/*realsense* /etc/udev/rules.d/ 2>/dev/null || true \
-    && cp /usr/lib/udev/rules.d/*realsense* /etc/udev/rules.d/ 2>/dev/null || true
-
 RUN apt install ros-noetic-realsense2-camera -y
 RUN apt install ros-noetic-aruco-ros -y
 
