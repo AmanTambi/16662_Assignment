@@ -6,8 +6,8 @@ from prompts import *
 
 # --- Configuration ---
 # Set your API Key (Recommend using an environment variable)
-# API_KEY = "AIzaSyC40E5GCKjVcrCfwAKRAnCMzH9x8e8aVi4"
-api_key = os.environ.get("GEMINI_API_KEY", "AIzaSyC4OE5GCKjVcrCfwAKRAnCMzH9x8e8aVi4")
+# API_KEY = ""
+api_key = os.environ.get("GEMINI_API_KEY", "")
 client = genai.Client(api_key=api_key)
 
 def get_realsense_frame():
